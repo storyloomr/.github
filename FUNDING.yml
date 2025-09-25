@@ -1,8 +1,11 @@
 # GitHub Funding Configuration
 # See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button
 
-github: storyloomr
+# GitHub Sponsors - uncomment when enrolled in GitHub Sponsors program
+# github: storyloomr
+
+# Open Collective
 open_collective: storyloomr
-custom:
-    - "https://storyloomr.com/sponsors"
-    - "mailto:sponsors@storyloomr.com"
+
+# Custom funding links (max 4 allowed)
+custom: ["https://storyloomr.com/sponsors", "mailto:sponsors@storyloomr.com"]
