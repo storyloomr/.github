@@ -198,7 +198,7 @@ jobs:
                               print("  ➕ CREATE " + label_name + ": " + label_config['description'] + " (#" + label_config['color'] + ")")
 
                   print("\n🎯 DRY RUN completed - no changes made!")
-                  EOF"
+                  EOF
 
             - name: Post-sync validation
               if: ${{ github.event.inputs.dry_run != 'true' }}
