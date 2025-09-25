@@ -1,0 +1,100 @@
+# Single Repository Label Sync Fallback
+# Use this workflow in individual repositories if org-wide sync fails
+# Copy this file to .github/workflows/sync-labels.yml in the target repository
+
+name: Sync Repository Labels
+
+on:
+    workflow_dispatch:
+        inputs:
+            dry_run:
+                description: "Run in dry-run mode (preview changes only)"
+                required: false
+                default: false
+                type: boolean
+
+permissions:
+    contents: read
+    issues: write
+
+jobs:
+    sync-labels:
+        name: Sync Labels from Organization Config
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Download organization label configuration
+              run: |
+                  echo "📥 Downloading label configuration from .github repository..."
+                  curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                    -H "Accept: application/vnd.github.v3.raw" \
+                    -o manage-your-labels.yml \
+                    "https://api.github.com/repos/storyloomr/.github/contents/manage-your-labels.yml"
+
+                  # Verify download
+                  if [ ! -f manage-your-labels.yml ]; then
+                    echo "❌ Failed to download configuration file"
+                    exit 1
+                  fi
+
+                  echo "✅ Configuration downloaded successfully"
+
+            - name: Modify config for single repository
+              run: |
+                  echo "🔧 Modifying configuration for single repository sync..."
+
+                  # Extract repository name from GitHub context
+                  REPO_NAME="${{ github.repository }}"
+                  REPO_NAME="${REPO_NAME#*/}"  # Remove org prefix
+
+                  # Create single-repo config
+                  cat > single-repo-config.yml << EOF
+                  repositories:
+                    - $REPO_NAME
+
+                  confirmRemove: false
+
+                  EOF
+
+                  # Append labels section from original config
+                  sed -n '/^labels:/,$p' manage-your-labels.yml >> single-repo-config.yml
+
+                  echo "✅ Single repository configuration created"
+
+            - name: Dry run - Show current labels
+              if: ${{ github.event.inputs.dry_run == 'true' }}
+              run: |
+                  echo "🧪 DRY RUN MODE: Current repository labels:"
+                  gh api "repos/${{ github.repository }}/labels" --jq '.[].name' | sort
+
+                  echo ""
+                  echo "📋 Labels that would be synced:"
+                  grep -A 1 'name:' single-repo-config.yml | grep 'name:' | head -10
+
+            - name: Sync labels to repository
+              if: ${{ github.event.inputs.dry_run != 'true' }}
+              uses: actions-automation/manage-your-labels@main
+              env:
+                  BOT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  config: single-repo-config.yml
+
+            - name: Verify sync results
+              if: ${{ github.event.inputs.dry_run != 'true' }}
+              run: |
+                  echo "✅ Label sync completed"
+                  echo "🔍 Verifying labels were applied:"
+
+                  # Check for some expected labels
+                  EXPECTED_LABELS=("type: bug" "type: feature" "status: backlog" "priority: p1-high")
+
+                  for label in "${EXPECTED_LABELS[@]}"; do
+                    if gh api "repos/${{ github.repository }}/labels" --jq '.[].name' | grep -q "^$label$"; then
+                      echo "  ✅ $label"
+                    else
+                      echo "  ❌ $label (missing)"
+                    fi
+                  done
+
+                  TOTAL_LABELS=$(gh api "repos/${{ github.repository }}/labels" --jq '. | length')
+                  echo "📊 Total labels: $TOTAL_LABELS"

@@ -1,0 +1,8 @@
+# GitHub Funding Configuration
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button
+
+github: storyloomr
+open_collective: storyloomr
+custom:
+    - "https://storyloomr.com/sponsors"
+    - "mailto:sponsors@storyloomr.com"
