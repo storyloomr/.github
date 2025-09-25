@@ -74,24 +74,24 @@ jobs:
 
                   token = os.environ['GITHUB_TOKEN']
                   headers = {
-                      'Authorization': f'token {token}',
+                      'Authorization': 'token ' + token,
                       'Accept': 'application/vnd.github.v3+json'
                   }
 
                   print("🔄 Starting label sync across repositories...")
 
                   for repo in config['repositories']:
-                      repo_name = f"storyloomr/{repo}"
-                      print(f"\n📁 Processing repository: {repo_name}")
+                      repo_name = "storyloomr/" + repo
+                      print("\n📁 Processing repository: " + repo_name)
                       
                       # Get existing labels
                       existing_response = requests.get(
-                          f"https://api.github.com/repos/{repo_name}/labels",
+                          "https://api.github.com/repos/" + repo_name + "/labels",
                           headers=headers
                       )
                       
                       if existing_response.status_code != 200:
-                          print(f"❌ Failed to fetch labels for {repo_name}: {existing_response.status_code}")
+                          print("❌ Failed to fetch labels for " + repo_name + ": " + str(existing_response.status_code))
                           continue
                       
                       existing_labels = {label['name']: label for label in existing_response.json()}
@@ -108,25 +108,25 @@ jobs:
                           if label_name in existing_labels:
                               # Update existing label
                               response = requests.patch(
-                                  f"https://api.github.com/repos/{repo_name}/labels/{label_name}",
+                                  "https://api.github.com/repos/" + repo_name + "/labels/" + label_name,
                                   headers=headers,
                                   json=label_data
-                              )
+                              )  
                               if response.status_code == 200:
-                                  print(f"  ✅ Updated: {label_name}")
+                                  print("  ✅ Updated: " + label_name)
                               else:
-                                  print(f"  ❌ Failed to update {label_name}: {response.status_code}")
+                                  print("  ❌ Failed to update " + label_name + ": " + str(response.status_code))
                           else:
                               # Create new label
                               response = requests.post(
-                                  f"https://api.github.com/repos/{repo_name}/labels",
+                                  "https://api.github.com/repos/" + repo_name + "/labels",
                                   headers=headers,
                                   json=label_data
                               )
                               if response.status_code == 201:
-                                  print(f"  ✅ Created: {label_name}")
+                                  print("  ✅ Created: " + label_name)
                               else:
-                                  print(f"  ❌ Failed to create {label_name}: {response.status_code}")
+                                  print("  ❌ Failed to create " + label_name + ": " + str(response.status_code))
 
                   print("\n🎉 Label sync completed!")
                   EOF
@@ -154,26 +154,26 @@ jobs:
 
                   token = os.environ['GITHUB_TOKEN']
                   headers = {
-                      'Authorization': f'token {token}',
+                      'Authorization': 'token ' + token,
                       'Accept': 'application/vnd.github.v3+json'
                   }
 
                   print("🔍 DRY RUN: Preview of label sync across repositories...")
-                  print(f"📊 Total repositories to sync: {len(config['repositories'])}")
-                  print(f"📊 Total labels to sync: {len(config['labels'])}")
+                  print("📊 Total repositories to sync: " + str(len(config['repositories'])))
+                  print("📊 Total labels to sync: " + str(len(config['labels'])))
 
                   for repo in config['repositories']:
-                      repo_name = f"storyloomr/{repo}"
-                      print(f"\n📁 Repository: {repo_name}")
+                      repo_name = "storyloomr/" + repo
+                      print("\n📁 Repository: " + repo_name)
                       
                       # Get existing labels
                       existing_response = requests.get(
-                          f"https://api.github.com/repos/{repo_name}/labels",
+                          "https://api.github.com/repos/" + repo_name + "/labels",
                           headers=headers
                       )
                       
                       if existing_response.status_code != 200:
-                          print(f"❌ Cannot access {repo_name}: {existing_response.status_code}")
+                          print("❌ Cannot access " + repo_name + ": " + str(existing_response.status_code))
                           continue
                       
                       existing_labels = {label['name']: label for label in existing_response.json()}
@@ -186,16 +186,16 @@ jobs:
                               existing = existing_labels[label_name]
                               changes = []
                               if existing['description'] != label_config['description']:
-                                  changes.append(f"description: '{existing['description']}' → '{label_config['description']}'")
+                                  changes.append("description: '" + existing['description'] + "' → '" + label_config['description'] + "'")
                               if existing['color'] != label_config['color']:
-                                  changes.append(f"color: #{existing['color']} → #{label_config['color']}")
+                                  changes.append("color: #" + existing['color'] + " → #" + label_config['color'])
                               
                               if changes:
-                                  print(f"  🔄 UPDATE {label_name}: {', '.join(changes)}")
+                                  print("  🔄 UPDATE " + label_name + ": " + ', '.join(changes))
                               else:
-                                  print(f"  ✅ OK {label_name}")
+                                  print("  ✅ OK " + label_name)
                           else:
-                              print(f"  ➕ CREATE {label_name}: {label_config['description']} (#{label_config['color']})")
+                              print("  ➕ CREATE " + label_name + ": " + label_config['description'] + " (#" + label_config['color'] + ")")
 
                   print("\n🎯 DRY RUN completed - no changes made!")
                   EOF"
