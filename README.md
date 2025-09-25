@@ -10,52 +10,52 @@ Our organization uses a consistent labeling system across all repositories to im
 
 #### Type Labels (Issue/PR Classification)
 
--   `type: bug` - Something is broken
--   `type: feature` - New capability
--   `type: chore` - Maintenance or refactor
--   `type: docs` - Documentation change
--   `type: design` - UX/UI or visual design
+- `type: bug` - Something is broken
+- `type: feature` - New capability
+- `type: chore` - Maintenance or refactor
+- `type: docs` - Documentation change
+- `type: design` - UX/UI or visual design
 
 #### Status Labels (Workflow State)
 
--   `status: backlog` - Needs review
--   `status: ready` - Groomed and ready to pick up
--   `status: blocked` - Waiting on dependency
--   `status: in progress` - Actively being worked
--   `status: testing` - In validation/QA
--   `status: approved` - Approved for merge/release
+- `status: backlog` - Needs review
+- `status: ready` - Groomed and ready to pick up
+- `status: blocked` - Waiting on dependency
+- `status: in progress` - Actively being worked
+- `status: testing` - In validation/QA
+- `status: approved` - Approved for merge/release
 
 #### Priority Labels (Impact and Urgency)
 
--   `priority: p0-urgent` - Sev-critical
--   `priority: p1-high` - High impact
--   `priority: p2-medium` - Medium impact
--   `priority: p3-low` - Low priority
+- `priority: p0-urgent` - Sev-critical
+- `priority: p1-high` - High impact
+- `priority: p2-medium` - Medium impact
+- `priority: p3-low` - Low priority
 
 #### Area Labels (Component/Service Ownership)
 
--   `area: frontend` - Frontend web applications
--   `area: mobile` - Mobile applications (iOS/Android)
--   `area: auth` - Authentication and authorization
--   `area: content` - Content management and delivery
--   `area: media` - Media processing and storage
--   `area: search` - Search functionality and indexing
--   `area: analytics` - Analytics and metrics collection
--   `area: infra` - Infrastructure and deployment
--   `area: gateway` - API gateway and routing
--   `area: kafka` - Event streaming and messaging
--   `area: redis` - Caching and session storage
--   `area: observability` - Monitoring, logging, and tracing
+- `area: frontend` - Frontend web applications
+- `area: mobile` - Mobile applications (iOS/Android)
+- `area: auth` - Authentication and authorization
+- `area: content` - Content management and delivery
+- `area: media` - Media processing and storage
+- `area: search` - Search functionality and indexing
+- `area: analytics` - Analytics and metrics collection
+- `area: infra` - Infrastructure and deployment
+- `area: gateway` - API gateway and routing
+- `area: kafka` - Event streaming and messaging
+- `area: redis` - Caching and session storage
+- `area: observability` - Monitoring, logging, and tracing
 
 #### Security Labels
 
--   `security: vuln` - Vulnerability or exposure
--   `security: audit` - Security review task
+- `security: vuln` - Vulnerability or exposure
+- `security: audit` - Security review task
 
 #### Community Labels
 
--   `good-first-issue` - Beginner-friendly
--   `help-wanted` - Maintainers seeking help
+- `good-first-issue` - Beginner-friendly
+- `help-wanted` - Maintainers seeking help
 
 ## 🔧 Setup Instructions
 
@@ -103,6 +103,7 @@ After configuring the secret, run the workflow manually to seed all repositories
     ```
 
 3. **Apply changes**:
+
     ```bash
     # Run workflow normally to apply changes
     gh workflow run manage-your-labels.yml
@@ -136,6 +137,7 @@ Before making changes, always perform a dry run:
     ```
 
 3. **Manual dry run** (check current labels):
+
     ```bash
     # List current labels on a specific repo
     gh api repos/storyloomr/storyloomr-svc-content/labels --jq '.[].name' | sort
@@ -155,9 +157,9 @@ Before making changes, always perform a dry run:
 
 The workflow runs automatically:
 
--   **Daily at 3 AM UTC** via cron schedule
--   **Manual trigger** available in Actions tab
--   **Dry run mode** available for testing
+- **Daily at 3 AM UTC** via cron schedule
+- **Manual trigger** available in Actions tab
+- **Dry run mode** available for testing
 
 ## 🛠️ Per-Repository Fallback
 
@@ -232,9 +234,9 @@ gh api repos/storyloomr/storyloomr-svc-content/labels > /dev/null && echo "✅ A
 
 ### Getting Help
 
--   Check workflow run logs in Actions tab
--   Validate YAML syntax with `yamllint manage-your-labels.yml`
--   Test single repository access: `gh api repos/storyloomr/REPO_NAME/labels`
+- Check workflow run logs in Actions tab
+- Validate YAML syntax with `yamllint manage-your-labels.yml`
+- Test single repository access: `gh api repos/storyloomr/REPO_NAME/labels`
 
 ## 📝 Configuration Reference
 
@@ -259,12 +261,12 @@ confirmRemove: false # Set to true to remove non-standard labels
 
 Our color scheme follows GitHub's recommendations:
 
--   **Red** (`#b60205`, `#d73a4a`, `#d93f0b`) - Critical, bugs, urgent
--   **Green** (`#0e8a16`, `#c2e0c6`, `#0b6623`) - Features, ready, approved
--   **Blue** (`#0075ca`, `#1d76db`, `#0366d6`) - Docs, in progress, infrastructure
--   **Yellow** (`#fbca04`) - Medium priority, design
--   **Purple** (`#5319e7`, `#7057ff`) - Areas, community
--   **Gray** (`#cfd3d7`, `#c5def5`) - Low priority, chores
+- **Red** (`#b60205`, `#d73a4a`, `#d93f0b`) - Critical, bugs, urgent
+- **Green** (`#0e8a16`, `#c2e0c6`, `#0b6623`) - Features, ready, approved
+- **Blue** (`#0075ca`, `#1d76db`, `#0366d6`) - Docs, in progress, infrastructure
+- **Yellow** (`#fbca04`) - Medium priority, design
+- **Purple** (`#5319e7`, `#7057ff`) - Areas, community
+- **Gray** (`#cfd3d7`, `#c5def5`) - Low priority, chores
 
 ## 📈 Extending the System
 
@@ -279,10 +281,10 @@ Our color scheme follows GitHub's recommendations:
 
 Labels automatically integrate with:
 
--   GitHub Projects (filter by labels)
--   Issue templates (auto-apply labels)
--   PR templates (suggest labels)
--   GitHub CLI (`gh issue list --label "type: bug"`)
+- GitHub Projects (filter by labels)
+- Issue templates (auto-apply labels)
+- PR templates (suggest labels)
+- GitHub CLI (`gh issue list --label "type: bug"`)
 
 ---
 

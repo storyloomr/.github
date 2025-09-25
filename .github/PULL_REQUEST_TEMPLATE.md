@@ -15,17 +15,17 @@ Fixes #
 <!-- Type: bug, feature, chore, docs, design -->
 <!-- Area: frontend, mobile, auth, content, media, search, analytics, infra, gateway, kafka, redis, observability -->
 
-**Type**: `type: ` <!-- e.g., type: feature -->
-**Area**: `area: ` <!-- e.g., area: frontend -->
+**Type**: `type:` <!-- e.g., type: feature -->
+**Area**: `area:` <!-- e.g., area: frontend -->
 
 ## 🧪 Testing
 
 <!-- Describe how you tested your changes -->
 
--   [ ] Unit tests added/updated
--   [ ] Integration tests added/updated
--   [ ] Manual testing completed
--   [ ] No tests needed (documentation/config only)
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] Manual testing completed
+- [ ] No tests needed (documentation/config only)
 
 ### Test Results
 
@@ -35,11 +35,11 @@ Fixes #
 
 <!-- Mark completed items with [x] -->
 
--   [ ] Code follows project style guidelines
--   [ ] Self-review completed
--   [ ] Documentation updated (if needed)
--   [ ] No breaking changes (or breaking changes documented)
--   [ ] Related issues linked above
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated (if needed)
+- [ ] No breaking changes (or breaking changes documented)
+- [ ] Related issues linked above
 
 ## 🔄 Deployment Notes
 
@@ -57,8 +57,8 @@ Fixes #
 
 **Reviewers**: Please ensure:
 
--   [ ] Code quality and standards met
--   [ ] Proper area labels applied
--   [ ] Tests are adequate
--   [ ] Documentation is complete
--   [ ] No security concerns
+- [ ] Code quality and standards met
+- [ ] Proper area labels applied
+- [ ] Tests are adequate
+- [ ] Documentation is complete
+- [ ] No security concerns
