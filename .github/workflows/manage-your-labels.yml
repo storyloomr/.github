@@ -1,0 +1,83 @@
+name: Manage Organization Labels
+
+on:
+    schedule:
+        # Run daily at 3 AM UTC to sync labels across all repositories
+        - cron: "0 3 * * *"
+    workflow_dispatch:
+        # Allow manual triggering of the workflow
+        inputs:
+            dry_run:
+                description: "Run in dry-run mode (list current labels without making changes)"
+                required: false
+                default: false
+                type: boolean
+
+permissions:
+    contents: read
+    issues: write
+
+jobs:
+    sync-labels:
+        name: Sync Labels Across Organization
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
+
+            - name: Validate BOT_TOKEN secret
+              env:
+                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+              run: |
+                  if [ -z "$BOT_TOKEN" ]; then
+                    echo "❌ BOT_TOKEN secret is not set. Please configure it in repository secrets."
+                    echo "Required scopes: repo, admin:org (write)"
+                    exit 1
+                  fi
+                  echo "✅ BOT_TOKEN secret is configured"
+
+            - name: Dry-run - List current labels from sample repository
+              env:
+                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+              run: |
+                  echo "🔍 Fetching current labels from storyloomr-svc-content (sample repo):"
+                  gh api repos/storyloomr/storyloomr-svc-content/labels \
+                    -H "Authorization: token $BOT_TOKEN" \
+                    --jq '.[].name' | head -10 || {
+                      echo "⚠️  Could not fetch labels. Check repository access and token permissions."
+                      exit 0
+                    }
+
+            - name: Sync labels across all repositories
+              if: ${{ github.event.inputs.dry_run != 'true' }}
+              uses: actions-automation/manage-your-labels@main
+              env:
+                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+              with:
+                  config: manage-your-labels.yml
+
+            - name: Dry-run mode - Show what would be synced
+              if: ${{ github.event.inputs.dry_run == 'true' }}
+              env:
+                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+              run: |
+                  echo "🧪 DRY RUN MODE: Would sync the following label configuration:"
+                  echo "📁 Config file: manage-your-labels.yml"
+                  echo "🏷️  Labels to sync:"
+                  cat manage-your-labels.yml | grep -A 2 "name:" | grep "name:" | head -10
+                  echo "📊 Total repositories: $(cat manage-your-labels.yml | grep -A 50 "repositories:" | grep "  -" | wc -l)"
+                  echo "🏷️  Total labels: $(cat manage-your-labels.yml | grep -A 200 "labels:" | grep "  - name:" | wc -l)"
+
+            - name: Post-sync validation
+              if: ${{ github.event.inputs.dry_run != 'true' }}
+              env:
+                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+              run: |
+                  echo "✅ Label sync completed successfully"
+                  echo "🔍 Verifying labels on sample repository:"
+                  gh api repos/storyloomr/storyloomr-svc-content/labels \
+                    -H "Authorization: token $BOT_TOKEN" \
+                    --jq '.[] | select(.name | startswith("type:")) | .name' || true

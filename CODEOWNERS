@@ -1,0 +1,46 @@
+# Storyloomr Organization CODEOWNERS
+# This file defines code ownership by component/service area
+# Automatically assigns reviewers based on changed files
+
+# Default owners for organization-wide files
+* @storyloomr/devops-team
+
+# Frontend Applications
+storyloomr-fe-reader/ @storyloomr/frontend-team
+storyloomr-fe-editor/ @storyloomr/frontend-team  
+storyloomr-fe-admin/ @storyloomr/frontend-team
+
+# Mobile Applications
+storyloomr-app-ios/ @storyloomr/mobile-team
+storyloomr-app-android/ @storyloomr/mobile-team
+
+# Shared Libraries
+storyloomr-lib-ui/ @storyloomr/frontend-team @storyloomr/mobile-team
+storyloomr-lib-sdk/ @storyloomr/backend-team @storyloomr/mobile-team
+
+# Backend Services
+storyloomr-svc-auth/ @storyloomr/backend-team
+storyloomr-svc-content/ @storyloomr/backend-team
+storyloomr-svc-search/ @storyloomr/backend-team  
+storyloomr-svc-media/ @storyloomr/backend-team
+storyloomr-svc-notify/ @storyloomr/backend-team
+storyloomr-svc-analytics/ @storyloomr/backend-team
+
+# Infrastructure & Platform
+storyloomr-infra-nginx/ @storyloomr/platform-team
+storyloomr-infra-redis/ @storyloomr/platform-team
+storyloomr-infra-kafka/ @storyloomr/platform-team
+storyloomr-infra-platform/ @storyloomr/platform-team
+storyloomr-api-gateway/ @storyloomr/platform-team
+storyloomr-observability/ @storyloomr/platform-team
+
+# Configuration & Schemas
+storyloomr-flags/ @storyloomr/backend-team @storyloomr/platform-team
+storyloomr-schemas-event/ @storyloomr/backend-team @storyloomr/platform-team
+
+# Assets & Static Resources
+storyloomr-assets/ @storyloomr/frontend-team @storyloomr/mobile-team
+
+# Organization Configuration
+.github/ @storyloomr/devops-team
+manage-your-labels.yml @storyloomr/devops-team

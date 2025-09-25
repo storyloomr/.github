@@ -1,0 +1,162 @@
+# Storyloomr Organization Label Taxonomy Configuration
+# This file defines the standard label set applied across all Storyloomr repositories
+# Managed by the org-wide label sync workflow
+
+repositories:
+    - storyloomr-fe-reader
+    - storyloomr-fe-editor
+    - storyloomr-fe-admin
+    - storyloomr-app-ios
+    - storyloomr-app-android
+    - storyloomr-lib-ui
+    - storyloomr-lib-sdk
+    - storyloomr-svc-auth
+    - storyloomr-svc-content
+    - storyloomr-svc-search
+    - storyloomr-svc-media
+    - storyloomr-svc-notify
+    - storyloomr-svc-analytics
+    - storyloomr-flags
+    - storyloomr-schemas-event
+    - storyloomr-infra-nginx
+    - storyloomr-infra-redis
+    - storyloomr-infra-kafka
+    - storyloomr-infra-platform
+    - storyloomr-api-gateway
+    - storyloomr-observability
+    - storyloomr-assets
+
+# Set to false to avoid accidentally removing existing labels during sync
+# Change to true only when you want to clean up non-standard labels
+confirmRemove: false
+
+labels:
+    # TYPE LABELS - Issue/PR classification
+    - name: "type: bug"
+      description: "Something is broken."
+      color: "d73a4a"
+
+    - name: "type: feature"
+      description: "New capability."
+      color: "0e8a16"
+
+    - name: "type: chore"
+      description: "Maintenance or refactor."
+      color: "c5def5"
+
+    - name: "type: docs"
+      description: "Documentation change."
+      color: "0075ca"
+
+    - name: "type: design"
+      description: "UX/UI or visual design."
+      color: "fbca04"
+
+    # STATUS LABELS - Workflow state
+    - name: "status: backlog"
+      description: "Needs review."
+      color: "d4c5f9"
+
+    - name: "status: ready"
+      description: "Groomed and ready to pick up."
+      color: "c2e0c6"
+
+    - name: "status: blocked"
+      description: "Waiting on dependency."
+      color: "b60205"
+
+    - name: "status: in progress"
+      description: "Actively being worked."
+      color: "1d76db"
+
+    - name: "status: testing"
+      description: "In validation/QA."
+      color: "a2eeef"
+
+    - name: "status: approved"
+      description: "Approved for merge/release."
+      color: "0b6623"
+
+    # PRIORITY LABELS - Impact and urgency
+    - name: "priority: p0-urgent"
+      description: "Sev-critical."
+      color: "b60205"
+
+    - name: "priority: p1-high"
+      description: "High impact."
+      color: "d93f0b"
+
+    - name: "priority: p2-medium"
+      description: "Medium impact."
+      color: "fbca04"
+
+    - name: "priority: p3-low"
+      description: "Low priority."
+      color: "cfd3d7"
+
+    # AREA LABELS - Component/service ownership
+    - name: "area: frontend"
+      description: "Frontend web applications."
+      color: "5319e7"
+
+    - name: "area: mobile"
+      description: "Mobile applications (iOS/Android)."
+      color: "5319e7"
+
+    - name: "area: auth"
+      description: "Authentication and authorization."
+      color: "5319e7"
+
+    - name: "area: content"
+      description: "Content management and delivery."
+      color: "5319e7"
+
+    - name: "area: media"
+      description: "Media processing and storage."
+      color: "5319e7"
+
+    - name: "area: search"
+      description: "Search functionality and indexing."
+      color: "5319e7"
+
+    - name: "area: analytics"
+      description: "Analytics and metrics collection."
+      color: "5319e7"
+
+    - name: "area: infra"
+      description: "Infrastructure and deployment."
+      color: "0366d6"
+
+    - name: "area: gateway"
+      description: "API gateway and routing."
+      color: "0366d6"
+
+    - name: "area: kafka"
+      description: "Event streaming and messaging."
+      color: "0366d6"
+
+    - name: "area: redis"
+      description: "Caching and session storage."
+      color: "0366d6"
+
+    - name: "area: observability"
+      description: "Monitoring, logging, and tracing."
+      color: "0366d6"
+
+    # SECURITY LABELS - Security-related issues
+    - name: "security: vuln"
+      description: "Vulnerability or exposure."
+      color: "b60205"
+
+    - name: "security: audit"
+      description: "Security review task."
+      color: "5319e7"
+
+    # COMMUNITY LABELS - Contributor engagement
+    - name: "good-first-issue"
+      description: "Beginner-friendly."
+      color: "7057ff"
+
+    - name: "help-wanted"
+      description: "Maintainers seeking help."
+      color: "008672"
