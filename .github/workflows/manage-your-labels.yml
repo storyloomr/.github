@@ -51,25 +51,154 @@ jobs:
                       exit 0
                     }
 
+            - name: Install dependencies
+              if: ${{ github.event.inputs.dry_run != 'true' }}
+              run: |
+                  python3 -m pip install --upgrade pip
+                  python3 -m pip install PyYAML requests
+
             - name: Sync labels across all repositories
               if: ${{ github.event.inputs.dry_run != 'true' }}
-              uses: actions-automation/manage-your-labels@main
               env:
-                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-              with:
-                  config: manage-your-labels.yml
+                  GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+              run: |
+                  python3 << 'EOF'
+                  import yaml
+                  import requests
+                  import json
+                  import os
 
-            - name: Dry-run mode - Show what would be synced
+                  # Load configuration
+                  with open('manage-your-labels.yml', 'r') as f:
+                      config = yaml.safe_load(f)
+
+                  token = os.environ['GITHUB_TOKEN']
+                  headers = {
+                      'Authorization': f'token {token}',
+                      'Accept': 'application/vnd.github.v3+json'
+                  }
+
+                  print("🔄 Starting label sync across repositories...")
+
+                  for repo in config['repositories']:
+                      repo_name = f"storyloomr/{repo}"
+                      print(f"\n📁 Processing repository: {repo_name}")
+                      
+                      # Get existing labels
+                      existing_response = requests.get(
+                          f"https://api.github.com/repos/{repo_name}/labels",
+                          headers=headers
+                      )
+                      
+                      if existing_response.status_code != 200:
+                          print(f"❌ Failed to fetch labels for {repo_name}: {existing_response.status_code}")
+                          continue
+                      
+                      existing_labels = {label['name']: label for label in existing_response.json()}
+                      
+                      # Sync each label
+                      for label_config in config['labels']:
+                          label_name = label_config['name']
+                          label_data = {
+                              'name': label_name,
+                              'description': label_config['description'],
+                              'color': label_config['color']
+                          }
+                          
+                          if label_name in existing_labels:
+                              # Update existing label
+                              response = requests.patch(
+                                  f"https://api.github.com/repos/{repo_name}/labels/{label_name}",
+                                  headers=headers,
+                                  json=label_data
+                              )
+                              if response.status_code == 200:
+                                  print(f"  ✅ Updated: {label_name}")
+                              else:
+                                  print(f"  ❌ Failed to update {label_name}: {response.status_code}")
+                          else:
+                              # Create new label
+                              response = requests.post(
+                                  f"https://api.github.com/repos/{repo_name}/labels",
+                                  headers=headers,
+                                  json=label_data
+                              )
+                              if response.status_code == 201:
+                                  print(f"  ✅ Created: {label_name}")
+                              else:
+                                  print(f"  ❌ Failed to create {label_name}: {response.status_code}")
+
+                  print("\n🎉 Label sync completed!")
+                  EOF
+
+            - name: Install dependencies (dry run)
+              if: ${{ github.event.inputs.dry_run == 'true' }}
+              run: |
+                  python3 -m pip install --upgrade pip
+                  python3 -m pip install PyYAML requests
+
+            - name: Dry run - Preview label sync
               if: ${{ github.event.inputs.dry_run == 'true' }}
               env:
-                  BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
               run: |
-                  echo "🧪 DRY RUN MODE: Would sync the following label configuration:"
-                  echo "📁 Config file: manage-your-labels.yml"
-                  echo "🏷️  Labels to sync:"
-                  cat manage-your-labels.yml | grep -A 2 "name:" | grep "name:" | head -10
-                  echo "📊 Total repositories: $(cat manage-your-labels.yml | grep -A 50 "repositories:" | grep "  -" | wc -l)"
-                  echo "🏷️  Total labels: $(cat manage-your-labels.yml | grep -A 200 "labels:" | grep "  - name:" | wc -l)"
+                  python3 << 'EOF'
+                  import yaml
+                  import requests
+                  import json
+                  import os
+
+                  # Load configuration
+                  with open('manage-your-labels.yml', 'r') as f:
+                      config = yaml.safe_load(f)
+
+                  token = os.environ['GITHUB_TOKEN']
+                  headers = {
+                      'Authorization': f'token {token}',
+                      'Accept': 'application/vnd.github.v3+json'
+                  }
+
+                  print("🔍 DRY RUN: Preview of label sync across repositories...")
+                  print(f"📊 Total repositories to sync: {len(config['repositories'])}")
+                  print(f"📊 Total labels to sync: {len(config['labels'])}")
+
+                  for repo in config['repositories']:
+                      repo_name = f"storyloomr/{repo}"
+                      print(f"\n📁 Repository: {repo_name}")
+                      
+                      # Get existing labels
+                      existing_response = requests.get(
+                          f"https://api.github.com/repos/{repo_name}/labels",
+                          headers=headers
+                      )
+                      
+                      if existing_response.status_code != 200:
+                          print(f"❌ Cannot access {repo_name}: {existing_response.status_code}")
+                          continue
+                      
+                      existing_labels = {label['name']: label for label in existing_response.json()}
+                      
+                      # Preview changes
+                      for label_config in config['labels']:
+                          label_name = label_config['name']
+                          
+                          if label_name in existing_labels:
+                              existing = existing_labels[label_name]
+                              changes = []
+                              if existing['description'] != label_config['description']:
+                                  changes.append(f"description: '{existing['description']}' → '{label_config['description']}'")
+                              if existing['color'] != label_config['color']:
+                                  changes.append(f"color: #{existing['color']} → #{label_config['color']}")
+                              
+                              if changes:
+                                  print(f"  🔄 UPDATE {label_name}: {', '.join(changes)}")
+                              else:
+                                  print(f"  ✅ OK {label_name}")
+                          else:
+                              print(f"  ➕ CREATE {label_name}: {label_config['description']} (#{label_config['color']})")
+
+                  print("\n🎯 DRY RUN completed - no changes made!")
+                  EOF"
 
             - name: Post-sync validation
               if: ${{ github.event.inputs.dry_run != 'true' }}
